@@ -6,20 +6,20 @@ If you're planning on translating DR1 or DR2, please consider there are
 projects already in process of working on them, which you can also join. 
 
 ## List of DR1 (PC) fan-made translations:
-- Italian: http://alliceteam.altervista.org/ (by All-Ice Team)
-- Spanish: https://transcene.net/ (by TranScene)
-- French: https://equipemirai.com/ (by Mirai Team)
+- Italian: http://alliceteam.altervista.org (by All-Ice Team)
+- Spanish: https://transcene.net (by TranScene)
+- French: https://equipemirai.com (by Mirai Team)
 - Russian: http://anivisual.net/board/1-1-0-463
 - Portuguese: http://zetsuboutranslations.me (by Zetsubou Translations)
 
 ## List of DR2 (PC) fan-made translations:
-- Italian: http://alliceteam.altervista.org/ (by All-Ice Team)
-- Spanish: https://transcene.net/ (by TranScene)
+- Italian: http://alliceteam.altervista.org (by All-Ice Team)
+- Spanish: https://transcene.net (by TranScene)
 
 -------------------------------------------------------------------------------------
 
 # 1 — Game titles compatible with the DRAT
-By using this program, you will be able to extract almost every file from:
+By using this program, you will be able to extract and repack almost every file from:
 - Danganronpa: Trigger Happy Havoc (PSP DEMO - PSP - PSVITA - PC)
 - Danganronpa 2: Goodbye Despair (PSVITA - PC)
 - Danganronpa Another Episode: Ultra Despair Girls (PSVITA - PC)
@@ -63,7 +63,7 @@ right type of ".pak" you are going to work on.
 ## N.B.  
 - Use some good text editor like Notepad++ to edit the ".xml" files.
   DON'T USE WINDOWS' BLOCK NOTES otherwise you will not able to repack back
-  the texts correctly! https://notepad-plus-plus.org/
+  the texts correctly! https://notepad-plus-plus.org
   
 - The only tool which you can use to edit the fonts for DR1 and DR2 is the SDSE1:
   https://bitbucket.org/blackdragonhunt/the-super-duper-script-editor
