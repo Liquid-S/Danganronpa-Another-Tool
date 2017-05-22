@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Windows.Forms;
 using System.IO;
 using System.Text;
@@ -11,9 +10,9 @@ using System.Reflection;
 
 namespace Danganronpa_Another_Tool
 {
-    public partial class Form1 : Form
+    public partial class DRAT : Form
     {
-        public Form1()
+        public DRAT()
         {
             InitializeComponent();
 
@@ -61,7 +60,7 @@ namespace Danganronpa_Another_Tool
 
             /* The tool doesn't convert images from PNG to GIM/BTX, so there is no point in cloning
              the "REPACK TEXTURE .PAK FROM PNG" button in the PSP tab and AE tabs. */
-            if (!tabControl1.SelectedTab.Text.Contains("PSP") && !tabControl1.SelectedTab.Text.Contains("DRAE"))
+            if (!tabControl1.SelectedTab.Text.Contains("PSP") && !tabControl1.SelectedTab.Text.Contains("DRAE (PSVITA)"))
                 CloneButton(ref TableLayoutToFill, ref button18);
 
             CloneButton(ref TableLayoutToFill, ref button19);
@@ -134,103 +133,22 @@ namespace Danganronpa_Another_Tool
             var eventsField = typeof(Component).GetField("events", BindingFlags.NonPublic | BindingFlags.Instance);
             var eventHandlerList = eventsField.GetValue(OriginalButton);
             eventsField.SetValue(Gril.GetControlFromPosition(Column, Row), eventHandlerList);
-        }
+        }       
 
-        string[] FrasiStatus = new string[] { "Ready!", "Wait...", "Done!" };
-
-        // AlphanumComparatorFast taken from https://gist.github.com/ngbrown/3842065
-        public class AlphanumComparatorFast : IComparer
+        // Clone the directories, this way the tool can delete, change and repack everything without worrying about damage the user work.
+        private void CloneDirectory(string OriginalDir, string TEMPFolder, string PAKType, int ConvertOrNotToConvert)
         {
-            public int Compare(object x, object y)
-            {
-                string s1 = x as string;
-                if (s1 == null)
-                    return 0;
-
-                string s2 = y as string;
-                if (s2 == null)
-                    return 0;
-
-                int len1 = s1.Length, len2 = s2.Length;
-                int marker1 = 0, marker2 = 0;
-
-                // Walk through two the strings with two markers.
-                while (marker1 < len1 && marker2 < len2)
-                {
-                    char ch1 = s1[marker1], ch2 = s2[marker2];
-
-                    // Some buffers we can build up characters in for each chunk.
-                    char[] space1 = new char[len1], space2 = new char[len2];
-                    int loc1 = 0, loc2 = 0;
-
-                    // Walk through all following characters that are digits or
-                    // characters in BOTH strings starting at the appropriate marker.
-                    // Collect char arrays.
-                    do
-                    {
-                        space1[loc1++] = ch1;
-                        marker1++;
-
-                        if (marker1 < len1)
-                            ch1 = s1[marker1];
-                        else
-                            break;
-
-                    } while (char.IsDigit(ch1) == char.IsDigit(space1[0]));
-
-                    do
-                    {
-                        space2[loc2++] = ch2;
-                        marker2++;
-
-                        if (marker2 < len2)
-                            ch2 = s2[marker2];
-                        else
-                            break;
-
-                    } while (char.IsDigit(ch2) == char.IsDigit(space2[0]));
-
-                    // If we have collected numbers, compare them numerically.
-                    // Otherwise, if we have strings, compare them alphabetically.
-                    string str1 = new string(space1), str2 = new string(space2);
-
-                    int result;
-
-                    if (char.IsDigit(space1[0]) && char.IsDigit(space2[0]))
-                    {
-                        int thisNumericChunk = int.Parse(str1);
-                        int thatNumericChunk = int.Parse(str2);
-                        result = thisNumericChunk.CompareTo(thatNumericChunk);
-                    }
-                    else
-                        result = str1.CompareTo(str2);
-
-
-                    if (result != 0)
-                        return result;
-
-                }
-                return len1 - len2;
-            }
-        }
-
-        // Clone the directories, this way the tool can delete, change and repack everything without worrying about destroy the user work.
-        private void CloneDirectory(string OriginalFolder, string TEMPFolder, string PAKType, int ConvertOrToNotConvert)
-        {
-            DirectoryInfo source = new DirectoryInfo(OriginalFolder),
+            DirectoryInfo source = new DirectoryInfo(OriginalDir),
                 target = new DirectoryInfo(TEMPFolder);
 
-            if (source.FullName.ToLower() == target.FullName.ToLower())
-                return;
-
-            // Delte the dir if it already exist.
+            // Delte the TEMPDir if it already exist.
             if (Directory.Exists(target.FullName) == true)
             {
                 Directory.Delete(target.FullName, true);
                 while (Directory.Exists(target.FullName)) { }
             }
 
-            // Create the new dir and make it invisible.
+            // Create the TEMPDir and make it invisible.
             DirectoryInfo NewTEMPDir = Directory.CreateDirectory(target.FullName);
             NewTEMPDir.Attributes = FileAttributes.Directory | FileAttributes.Hidden;
 
@@ -248,7 +166,7 @@ namespace Danganronpa_Another_Tool
                 string SingleImage = fi.FullName;
 
                 // Converts the images if the user want it and is not working with the PSP version...
-                if (ConvertOrToNotConvert == 1 && !tabControl1.SelectedTab.Text.Contains("PSP") && (fi.Extension == ".png" || fi.Extension == ".tga"))
+                if (ConvertOrNotToConvert == 1 && !tabControl1.SelectedTab.Text.Contains("PSP") && (fi.Extension == ".png" || fi.Extension == ".tga"))
                 {
                     // Converts ".png" images to ".tga" saving them directly in the TEMP folder.
                     if (fi.Extension == ".png")
@@ -274,8 +192,8 @@ namespace Danganronpa_Another_Tool
             }
 
             // Copy the subfolders and their contents.
-            foreach (string Sottocartella in Directory.GetDirectories(OriginalFolder, "*", SearchOption.TopDirectoryOnly))
-                CloneDirectory(Sottocartella, Path.Combine(TEMPFolder, Path.GetFileName(Sottocartella)), PAKType, ConvertOrToNotConvert);
+            foreach (string SubDir in Directory.GetDirectories(OriginalDir, "*", SearchOption.TopDirectoryOnly))
+                CloneDirectory(SubDir, Path.Combine(TEMPFolder, Path.GetFileName(SubDir)), PAKType, ConvertOrNotToConvert);
         }
 
         public static void UseEXEToConvert(string FileEXE, string CodeLine)
@@ -308,8 +226,8 @@ namespace Danganronpa_Another_Tool
             return temp;
         }
 
-        // Clean all that is before the folder's name, turns "\\" to "/" and ordered the string[] alphanumerically.
-        private string[] CleanAddress(String[] stringa, string folder)
+        // Clean all that is before the folder's name, turns "\\" to "/" and order the string[] alphanumerically.
+        private string[] CleanAddress(string[] stringa, string folder)
         {
             Array.Sort(stringa, new AlphanumComparatorFast());
 
@@ -326,24 +244,24 @@ namespace Danganronpa_Another_Tool
                 WAD.Title = "Select one or more \"file.wad\"";
                 WAD.Filter = ".wad|*.wad|All Files (*.*)|*.*";
                 WAD.FileName = "*.wad";
-                WAD.Multiselect = true; // It allows the user to choose multiple files at a once.
+                WAD.Multiselect = true;
 
                 if (WAD.ShowDialog() == DialogResult.OK)
                 {
-                    label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                    label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                     label5.Refresh(); // Refresh the Status label.
 
                     foreach (string SingleWAD in WAD.FileNames)
                     {
                         string DestinationDir = tabControl1.SelectedTab.Text + " [MANUAL MODE]\\EXTRACTED\\WAD\\" + Path.GetFileNameWithoutExtension(SingleWAD);
 
-                        if (Directory.Exists(DestinationDir) == false) // Create the directory if doesn't exist
+                        if (Directory.Exists(DestinationDir) == false)
                             Directory.CreateDirectory(DestinationDir);
 
                         ExtractWAD(SingleWAD, DestinationDir);
                     }
 
-                    label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                    label5.Text = "Ready!"; // Change the "Status" to "Ready!".
                     MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
@@ -426,7 +344,7 @@ namespace Danganronpa_Another_Tool
             // If the folder "EXTRACTED WAD" exists and is not empty.
             if (Directory.Exists(OriginalDir) && Directory.EnumerateDirectories(OriginalDir).Any() == true)
             {
-                label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                 label5.Refresh(); // Refresh the Status label.
 
                 string DestinationDir = tabControl1.SelectedTab.Text + " [MANUAL MODE]\\REPACKED\\WAD";
@@ -439,7 +357,7 @@ namespace Danganronpa_Another_Tool
                 foreach (string FolderToRebuildToWAD in Directory.GetDirectories(OriginalDir, "*", SearchOption.TopDirectoryOnly))
                     RePackWAD(FolderToRebuildToWAD, DestinationDir);
 
-                label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                label5.Text = "Ready!"; // Change the "Status" to "Ready!".
                 MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -594,12 +512,12 @@ namespace Danganronpa_Another_Tool
 
         private void button3_Click(object sender, EventArgs e) // UNPACK .CPK
         {
-            Process.Start("http://lmgtfy.com/?q=%22cpk_unpack.exe%22");
+            Process.Start("https://github.com/s1cp/VitaGuide/wiki#unpacking-the-files");
         }
 
         private void button4_Click(object sender, EventArgs e) // REPACK .CPK
         {
-            Process.Start("http://lmgtfy.com/?q=%22Cri+Packed+File+Maker%22");
+            Process.Start("https://github.com/s1cp/VitaGuide/wiki#unpacking-the-files");
         }
 
         private void button5_Click(object sender, EventArgs e) // EXTRACT FULL GAME UMDIMAGE.DAT (PSP ONLY) 
@@ -618,17 +536,17 @@ namespace Danganronpa_Another_Tool
 
                     if (UMDIMAGE.ShowDialog() == DialogResult.OK && EBOOT.ShowDialog() == DialogResult.OK)
                     {
-                        label5.Text = FrasiStatus[1];
+                        label5.Text = "Wait...";
                         label5.Refresh();
 
                         string DestinationDir = "DR1 (PSP) [MANUAL MODE]\\EXTRACTED\\" + Path.GetFileNameWithoutExtension(UMDIMAGE.FileName).ToUpper() + " (FULL GAME)";
 
-                        if (Directory.Exists(DestinationDir) == false) // Create the directory if doesn't exist
+                        if (Directory.Exists(DestinationDir) == false)
                             Directory.CreateDirectory(DestinationDir);
 
                         ExtractDAT(UMDIMAGE.FileName, DestinationDir, 0xF5A38, EBOOT.FileName, "FULL");
 
-                        label5.Text = FrasiStatus[0];
+                        label5.Text = "Ready!";
                         MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
@@ -651,17 +569,17 @@ namespace Danganronpa_Another_Tool
 
                     if (UMDIMAGE.ShowDialog() == DialogResult.OK && EBOOT.ShowDialog() == DialogResult.OK)
                     {
-                        label5.Text = FrasiStatus[1];
+                        label5.Text = "Wait...";
                         label5.Refresh();
 
                         string DestinationDir = "DR1 (PSP) [MANUAL MODE]\\EXTRACTED\\" + Path.GetFileNameWithoutExtension(UMDIMAGE.FileName).ToUpper() + " (DEMO)";
 
-                        if (Directory.Exists(DestinationDir) == false) // Create the directory if doesn't exist
+                        if (Directory.Exists(DestinationDir) == false)
                             Directory.CreateDirectory(DestinationDir);
 
                         ExtractDAT(UMDIMAGE.FileName, DestinationDir, 0x145c1c, EBOOT.FileName, "DEMO");
 
-                        label5.Text = FrasiStatus[0];
+                        label5.Text = "Ready!";
                         MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     }
                 }
@@ -770,7 +688,7 @@ namespace Danganronpa_Another_Tool
 
                 if (LIN.ShowDialog() == DialogResult.OK)
                 {
-                    label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                    label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                     label5.Refresh(); // Refresh the Status label.
 
                     foreach (string SingleLIN in LIN.FileNames)
@@ -780,7 +698,7 @@ namespace Danganronpa_Another_Tool
                         ExtractLIN(SingleLIN, DestinationDir);
                     }
 
-                    label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                    label5.Text = "Ready!"; // Change the "Status" to "Ready!".
 
                     MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -815,7 +733,6 @@ namespace Danganronpa_Another_Tool
                         // If the file contains text or the user has nevertheless chosen to process files with no text, then continue.
                         if (NSentences > 0 || (NSentences <= 0 && ignoreLINWoTextToolStripMenuItem.Checked == false))
                         {
-                            // Create the directory if doesn't exist already.
                             if (Directory.Exists(DestinationDir) == false)
                                 Directory.CreateDirectory(DestinationDir);
 
@@ -904,7 +821,6 @@ namespace Danganronpa_Another_Tool
                         // The text is cleaned from the PSP codes.
                         if (cLEANPSPCLTToolStripMenuItem.Checked == true && Sentence != null)
                             Sentence = CleanTextFromPSPCodes(Sentence);
-
 
                         //START Removes extra \n.
                         if (eraseExtraLinefeedsToolStripMenuItem.Checked == true && Sentence != null)
@@ -1185,7 +1101,7 @@ namespace Danganronpa_Another_Tool
             // If "EXTRACTED LIN" exists and it's not empty.
             if (Directory.Exists(OriginalDir) && Directory.EnumerateDirectories(OriginalDir).Any() == true)
             {
-                label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                 label5.Refresh(); // Refresh the Status label.
 
                 string DestinationDir = tabControl1.SelectedTab.Text + " [MANUAL MODE]\\REPACKED\\LIN";
@@ -1203,7 +1119,7 @@ namespace Danganronpa_Another_Tool
                         && ignoreLINWoTextToolStripMenuItem.Checked == false))
                         RePackText(DirLinToBeRepacked, DestinationDir);
 
-                label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                label5.Text = "Ready!"; // Change the "Status" to "Ready!".
                 MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -1457,7 +1373,7 @@ namespace Danganronpa_Another_Tool
 
                 if (PAK.ShowDialog() == DialogResult.OK)
                 {
-                    label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                    label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                     label5.Refresh(); // Refresh the Status label.
 
                     foreach (string SinglePAK in PAK.FileNames)
@@ -1467,7 +1383,7 @@ namespace Danganronpa_Another_Tool
                         MakeXML(TextExtractor(SinglePAK), null, Path.Combine(DestinationDir, Path.GetFileNameWithoutExtension(SinglePAK) + ".xml"));
                     }
 
-                    label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                    label5.Text = "Ready!"; // Change the "Status" to "Ready!".
 
                     MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -1481,7 +1397,7 @@ namespace Danganronpa_Another_Tool
             // If "EXTRACTED TEXT PAK TYPE 1" exists and it's not empty.
             if (Directory.Exists(OriginalDir) && Directory.EnumerateDirectories(OriginalDir).Any() == true)
             {
-                label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                 label5.Refresh(); // Refresh the Status label.
 
                 string DestinationDir = tabControl1.SelectedTab.Text + " [MANUAL MODE]\\REPACKED\\TEXT PAK TYPE 1";
@@ -1494,7 +1410,7 @@ namespace Danganronpa_Another_Tool
                 foreach (string PakDirToBeRepacked in Directory.GetDirectories(OriginalDir, "*", SearchOption.TopDirectoryOnly))
                     RePackText(PakDirToBeRepacked, DestinationDir);
 
-                label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                label5.Text = "Ready!"; // Change the "Status" to "Ready!".
                 MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -1510,7 +1426,7 @@ namespace Danganronpa_Another_Tool
 
                 if (PAK.ShowDialog() == DialogResult.OK)
                 {
-                    label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                    label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                     label5.Refresh(); // Refresh the Status label.
 
                     foreach (string SinglePAK in PAK.FileNames)
@@ -1534,7 +1450,7 @@ namespace Danganronpa_Another_Tool
                                 }
                             }
                     }
-                    label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                    label5.Text = "Ready!"; // Change the "Status" to "Ready!".
 
                     MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -1543,17 +1459,17 @@ namespace Danganronpa_Another_Tool
 
         private void button12_Click(object sender, EventArgs e) // REPACK TEXT PAK TYPE 2 ".PAK" --> LIN inside a PAK 
         {
-            string OriginalFolder = tabControl1.SelectedTab.Text + " [MANUAL MODE]\\EXTRACTED\\TEXT PAK TYPE 2",
+            string OriginalDir = tabControl1.SelectedTab.Text + " [MANUAL MODE]\\EXTRACTED\\TEXT PAK TYPE 2",
                 TEMPFolder = "TEMP001";
 
             // If "EXTRACTED PAK" exists and it's not empty.
-            if (Directory.Exists(OriginalFolder) && Directory.EnumerateDirectories(OriginalFolder).Any() == true)
+            if (Directory.Exists(OriginalDir) && Directory.EnumerateDirectories(OriginalDir).Any() == true)
             {
-                label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                 label5.Refresh(); // Refresh the Status label.
 
                 // 0 = Don't convert the images, leave them like they are.
-                CloneDirectory(OriginalFolder, TEMPFolder, "TEXT", 0);
+                CloneDirectory(OriginalDir, TEMPFolder, "TEXT", 0);
 
                 // For each LIN folder to be repacked.
                 foreach (string DirsWithinTEMPFolder in Directory.GetDirectories(TEMPFolder, "*", SearchOption.TopDirectoryOnly))
@@ -1574,7 +1490,7 @@ namespace Danganronpa_Another_Tool
                 Directory.Delete(TEMPFolder, true);
                 while (Directory.Exists(TEMPFolder)) { }
 
-                label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                label5.Text = "Ready!"; // Change the "Status" to "Ready!".
                 MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -1590,7 +1506,7 @@ namespace Danganronpa_Another_Tool
 
                 if (PAK.ShowDialog() == DialogResult.OK)
                 {
-                    label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                    label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                     label5.Refresh(); // Refresh the Status label.
 
                     foreach (string SinglePAK in PAK.FileNames)
@@ -1612,7 +1528,7 @@ namespace Danganronpa_Another_Tool
                                 while (File.Exists(SottoPAK)) { }
                             }
                     }
-                    label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                    label5.Text = "Ready!"; // Change the "Status" to "Ready!".
 
                     MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -1621,17 +1537,17 @@ namespace Danganronpa_Another_Tool
 
         private void button14_Click(object sender, EventArgs e) // REPACK TEXT PAK TYPE 3 ".PAK" --> PAK inside a PAK 
         {
-            string OriginalFolder = tabControl1.SelectedTab.Text + " [MANUAL MODE]\\EXTRACTED\\TEXT PAK TYPE 3",
+            string OriginalDir = tabControl1.SelectedTab.Text + " [MANUAL MODE]\\EXTRACTED\\TEXT PAK TYPE 3",
            TEMPFolder = "TEMP001";
 
             // If "EXTRACTED PAK" exists and it's not empty.
-            if (Directory.Exists(OriginalFolder) && Directory.EnumerateDirectories(OriginalFolder).Any() == true)
+            if (Directory.Exists(OriginalDir) && Directory.EnumerateDirectories(OriginalDir).Any() == true)
             {
-                label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                 label5.Refresh(); // Refresh the Status label.
 
                 // 0 = Don't convert the images, leave them like they are.
-                CloneDirectory(OriginalFolder, TEMPFolder, "TEXT", 0);
+                CloneDirectory(OriginalDir, TEMPFolder, "TEXT", 0);
 
                 // For each LIN folder to be repacked.
                 foreach (string DirsWithinTEMPFolder in Directory.GetDirectories(TEMPFolder, "*", SearchOption.TopDirectoryOnly))
@@ -1652,7 +1568,7 @@ namespace Danganronpa_Another_Tool
                 Directory.Delete(TEMPFolder, true);
                 while (Directory.Exists(TEMPFolder)) { }
 
-                label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                label5.Text = "Ready!"; // Change the "Status" to "Ready!".
                 MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -1668,7 +1584,7 @@ namespace Danganronpa_Another_Tool
 
                 if (PAK.ShowDialog() == DialogResult.OK)
                 {
-                    label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                    label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                     label5.Refresh(); // Refresh the Status label.
 
                     foreach (string SinglePAK in PAK.FileNames)
@@ -1679,7 +1595,7 @@ namespace Danganronpa_Another_Tool
                         ExtractPAK(SinglePAK, DestinationDir, 0);
                     }
 
-                    label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                    label5.Text = "Ready!"; // Change the "Status" to "Ready!".
 
                     MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -1689,7 +1605,6 @@ namespace Danganronpa_Another_Tool
         // If ToPNG == 1 then convert the images.
         private void ExtractPAK(string PAKFileAddress, string DestinationDir, int ToPNG)
         {
-            // Create the directory if doesn't exist already.
             if (Directory.Exists(DestinationDir) == false)
                 Directory.CreateDirectory(DestinationDir);
 
@@ -1916,17 +1831,17 @@ namespace Danganronpa_Another_Tool
 
         private void button16_Click(object sender, EventArgs e) // REPACK TEXTURE ".PAK" W/O CONVERT 
         {
-            string OriginalFolder = tabControl1.SelectedTab.Text + " [MANUAL MODE]\\EXTRACTED\\TEXTURE PAK (W-O CONVERT)",
+            string OriginalDir = tabControl1.SelectedTab.Text + " [MANUAL MODE]\\EXTRACTED\\TEXTURE PAK (W-O CONVERT)",
                 TEMPFolder = "TEMP001";
 
             // If "EXTRACTED PAK" exists and it's not empty.
-            if (Directory.Exists(OriginalFolder) && Directory.EnumerateDirectories(OriginalFolder).Any() == true)
+            if (Directory.Exists(OriginalDir) && Directory.EnumerateDirectories(OriginalDir).Any() == true)
             {
-                label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                 label5.Refresh(); // Refresh the Status label.
 
                 // 0 = Don't convert the images, leave them like they are.
-                CloneDirectory(OriginalFolder, TEMPFolder, "IMAGES", 0);
+                CloneDirectory(OriginalDir, TEMPFolder, "IMAGES", 0);
 
                 string DestinationDir = tabControl1.SelectedTab.Text + " [MANUAL MODE]\\REPACKED\\TEXTURE PAK (W-O CONVERT)";
 
@@ -1942,7 +1857,7 @@ namespace Danganronpa_Another_Tool
                 Directory.Delete(TEMPFolder, true);
                 while (Directory.Exists(TEMPFolder)) { }
 
-                label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                label5.Text = "Ready!"; // Change the "Status" to "Ready!".
                 MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -2026,7 +1941,7 @@ namespace Danganronpa_Another_Tool
 
                 if (PAK.ShowDialog() == DialogResult.OK)
                 {
-                    label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                    label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                     label5.Refresh(); // Refresh the Status label.
 
                     foreach (string SinglePAK in PAK.FileNames)
@@ -2037,7 +1952,7 @@ namespace Danganronpa_Another_Tool
                         ExtractPAK(SinglePAK, DestinationDir, 1);
                     }
 
-                    label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                    label5.Text = "Ready!"; // Change the "Status" to "Ready!".
 
                     MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -2046,18 +1961,18 @@ namespace Danganronpa_Another_Tool
 
         private void button18_Click(object sender, EventArgs e) // REPACK TEXTURE ".PAK" TO PNG 
         {
-            string OriginalFolder = tabControl1.SelectedTab.Text + " [MANUAL MODE]\\EXTRACTED\\TEXTURE PAK (TO PNG)",
+            string OriginalDir = tabControl1.SelectedTab.Text + " [MANUAL MODE]\\EXTRACTED\\TEXTURE PAK (TO PNG)",
                TEMPFolder = "TEMP001";
 
             // If "EXTRACTED PAK" exists and it's not empty.
-            if (Directory.Exists(OriginalFolder) && Directory.EnumerateDirectories(OriginalFolder).Any() == true)
+            if (Directory.Exists(OriginalDir) && Directory.EnumerateDirectories(OriginalDir).Any() == true)
             {
-                label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                 label5.Refresh(); // Refresh the Status label.
 
                 /* Folder to be cloned - folder where the files will be copied - File type being worked on.
                  * - 1 = Convert the images to GXT, TGA or BXT (it depends from the game). */
-                CloneDirectory(OriginalFolder, TEMPFolder, "IMAGES", 1);
+                CloneDirectory(OriginalDir, TEMPFolder, "IMAGES", 1);
 
                 string DestinationDir = tabControl1.SelectedTab.Text + " [MANUAL MODE]\\REPACKED\\TEXTURE PAK (TO PNG)";
 
@@ -2069,11 +1984,11 @@ namespace Danganronpa_Another_Tool
                 foreach (string PakDirToBeRepacked in Directory.GetDirectories(TEMPFolder, "*", SearchOption.TopDirectoryOnly))
                     RePackPAK(PakDirToBeRepacked, DestinationDir, 1); // 1 == Convert the subdirs to ".pak". 
 
-                // Remove the temp folder as it is no longer needed.
+                // Remove the temp folder as it's no longer needed.
                 Directory.Delete(TEMPFolder, true);
                 while (Directory.Exists(TEMPFolder)) { }
 
-                label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                label5.Text = "Ready!"; // Change the "Status" to "Ready!".
                 MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
@@ -2084,11 +1999,11 @@ namespace Danganronpa_Another_Tool
             {
                 IMAGES.Title = "Select one or more files.";
                 IMAGES.Filter = "Compatible files|*.tga; *.gxt; *.btx; *.gim|.tga|*.tga|.gxt|*.gxt|.btx|*.btx|.gim|*.gim|All Files (*.*)|*.*";
-                IMAGES.Multiselect = true; // It allows you to select multiple images at once.
+                IMAGES.Multiselect = true;
 
                 if (IMAGES.ShowDialog() == DialogResult.OK)
                 {
-                    label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                    label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                     label5.Refresh(); // Refresh the Status label.
 
                     foreach (string SingleImage in IMAGES.FileNames)
@@ -2098,7 +2013,6 @@ namespace Danganronpa_Another_Tool
 
                         DestinationDir = DestinationDir.Replace(".", null);
 
-                        // Create the directory if doesn't exist already.
                         if (Directory.Exists(DestinationDir) == false)
                             Directory.CreateDirectory(DestinationDir);
 
@@ -2110,7 +2024,7 @@ namespace Danganronpa_Another_Tool
                             ConvertFromGIMToPNG(SingleImage, DestinationDir);
                     }
 
-                    label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                    label5.Text = "Ready!"; // Change the "Status" to "Ready!".
 
                     MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -2123,11 +2037,11 @@ namespace Danganronpa_Another_Tool
             {
                 IMAGES.Title = "Select one or more files.";
                 IMAGES.Filter = "Compatible files|*.png; *.gxt; *.btx|.png|*.png|.gxt|*.gxt|.btx|*.btx|All Files (*.*)|*.*";
-                IMAGES.Multiselect = true; // It allows you to select multiple images at once.
+                IMAGES.Multiselect = true;
 
                 if (IMAGES.ShowDialog() == DialogResult.OK)
                 {
-                    label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                    label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                     label5.Refresh(); // Refresh the Status label.
 
                     foreach (string SingleImage in IMAGES.FileNames)
@@ -2137,7 +2051,7 @@ namespace Danganronpa_Another_Tool
 
                         DestinationDir = DestinationDir.Replace(".", null);
 
-                        if (Directory.Exists(DestinationDir) == false) // Create the directory if doesn't exist.
+                        if (Directory.Exists(DestinationDir) == false)
                             Directory.CreateDirectory(DestinationDir);
 
                         // We have to convert Images.btx && .gxt to .png and finally to .tga.
@@ -2158,7 +2072,7 @@ namespace Danganronpa_Another_Tool
                         }
                     }
 
-                    label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                    label5.Text = "Ready!"; // Change the "Status" to "Ready!".
 
                     MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -2171,11 +2085,11 @@ namespace Danganronpa_Another_Tool
             {
                 IMAGES.Title = "Select one or more files.";
                 IMAGES.Filter = "Compatible files|*.png; *.tga; *.btx|.png|*.png|.tga|*.tga|.btx|*.btx|All Files (*.*)|*.*";
-                IMAGES.Multiselect = true; // It allows you to select multiple images at once.
+                IMAGES.Multiselect = true;
 
                 if (IMAGES.ShowDialog() == DialogResult.OK)
                 {
-                    label5.Text = FrasiStatus[1]; // Change "Ready!" to "Wait..."
+                    label5.Text = "Wait..."; // Change "Ready!" to "Wait..."
                     label5.Refresh(); // Refresh the Status label.
 
                     foreach (string SingleImage in IMAGES.FileNames)
@@ -2185,7 +2099,7 @@ namespace Danganronpa_Another_Tool
 
                         DestinationDir = DestinationDir.Replace(".", null);
 
-                        if (Directory.Exists(DestinationDir) == false) // Create the directory if doesn't exist.
+                        if (Directory.Exists(DestinationDir) == false)
                             Directory.CreateDirectory(DestinationDir);
 
                         string CodeLine = "-i \"" + SingleImage + "\" -o \"" + Path.Combine(DestinationDir, Path.GetFileNameWithoutExtension(SingleImage)) + ".gxt\"";
@@ -2223,7 +2137,7 @@ namespace Danganronpa_Another_Tool
                         }
                     }
 
-                    label5.Text = FrasiStatus[0]; // Change the "Status" to "Ready!".
+                    label5.Text = "Ready!"; // Change the "Status" to "Ready!".
 
                     MessageBox.Show("Done!", "Status", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
@@ -2258,27 +2172,27 @@ namespace Danganronpa_Another_Tool
             UseEXEToConvert("Ext\\psp2gxt.exe", CodeLine);
         }
 
-        private void ConvertGxtBtxToPNG(string ImmagineDaconvertire, string DestinationDir)
+        private void ConvertGxtBtxToPNG(string Image, string DestinationDir)
         {
-            string ExtesionIMG = Path.GetExtension(ImmagineDaconvertire),
-            CodeLine = "\"" + ImmagineDaconvertire + "\" --output \"" + DestinationDir + "\"";
+            string ExtesionIMG = Path.GetExtension(Image),
+            CodeLine = "\"" + Image + "\" --output \"" + DestinationDir + "\"";
 
             UseEXEToConvert("Ext\\ScarletTestApp.exe", CodeLine);
 
             /* If it exists, delete the decompressed file. "Scarlet" automatically decompress
             the compressed images but doesn't erase the decompressed files after having used them. */
-            if (File.Exists(Path.Combine(DestinationDir, Path.GetFileNameWithoutExtension(ImmagineDaconvertire) + ExtesionIMG + ".dec")))
+            if (File.Exists(Path.Combine(DestinationDir, Path.GetFileNameWithoutExtension(Image) + ExtesionIMG + ".dec")))
             {
-                File.Delete(Path.Combine(DestinationDir, Path.GetFileNameWithoutExtension(ImmagineDaconvertire) + ExtesionIMG + ".dec"));
-                while (File.Exists(Path.Combine(DestinationDir, Path.GetFileNameWithoutExtension(ImmagineDaconvertire) + ExtesionIMG + ".dec"))) { }
+                File.Delete(Path.Combine(DestinationDir, Path.GetFileNameWithoutExtension(Image) + ExtesionIMG + ".dec"));
+                while (File.Exists(Path.Combine(DestinationDir, Path.GetFileNameWithoutExtension(Image) + ExtesionIMG + ".dec"))) { }
             }
-            if (File.Exists(Path.Combine(DestinationDir, Path.GetFileNameWithoutExtension(ImmagineDaconvertire) + ExtesionIMG + ".dec.dec")))
+            if (File.Exists(Path.Combine(DestinationDir, Path.GetFileNameWithoutExtension(Image) + ExtesionIMG + ".dec.dec")))
             {
-                File.Delete(Path.Combine(DestinationDir, Path.GetFileNameWithoutExtension(ImmagineDaconvertire) + ExtesionIMG + ".dec.dec"));
-                while (File.Exists(Path.Combine(DestinationDir, Path.GetFileNameWithoutExtension(ImmagineDaconvertire) + ExtesionIMG + ".dec.dec"))) { }
+                File.Delete(Path.Combine(DestinationDir, Path.GetFileNameWithoutExtension(Image) + ExtesionIMG + ".dec.dec"));
+                while (File.Exists(Path.Combine(DestinationDir, Path.GetFileNameWithoutExtension(Image) + ExtesionIMG + ".dec.dec"))) { }
             }
         }
-
+        
         private void ConvertFromGIMToPNG(string Image, string DestinationDir)
         {
             string CodeLine = "\"" + Image + "\"";
