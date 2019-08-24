@@ -94,6 +94,6 @@ right type of ".pak" you are going to work on.
   Thanks to: https://github.com/xdanieldzd/Scarlet
   
 - "GIM2PNG.exe" is used to convert textures from ".GIM" to ".PNG".
-  If you know who is the author of this tool, let me know.
+  Thanks to: https://junk2ool.net/tools/psx/start
   
 - "psp2gxt.exe" is used to convert textures from ".TGA" to ".GXT".
