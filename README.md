@@ -10,7 +10,7 @@ projects already in process of working on them, which you can also join.
 - French: https://equipemirai.com/ (by Mirai Team)
 - Russian: http://anivisual.net/board/1-1-0-463 (By Проект Монокума (Monokuma Project))
 - Portuguese: https://discord.gg/aE7yGJz (by Kibou Project)
-- Turkish: https://truthfulroad.wordpress.com/danganronpa-umudun-umutsuz-ogrencileri/ (Umudun Zirvesi Projesi or Project Hope's Peak)
+- Turkish: https://truthfulroad.wordpress.com/danganronpa-umudun-umutsuz-ogrencileri/ (by Umudun Zirvesi Projesi or Project Hope's Peak)
 
 ## List of DR2 (PC) fan-made translations:
 
@@ -24,7 +24,7 @@ projects already in process of working on them, which you can also join.
 - Italian: http://alliceteam.altervista.org/ (by All-Ice Team)
 - Spanish: https://tradusquare.es/grupo.php?name=transcene (by TranScene)
 - French: https://equipemirai.com/ (by Mirai Team)
-- Russian: https://vk.com/club185606296 (PastelCat's)
+- Russian: https://vk.com/club185606296 (by PastelCat's)
 
 -------------------------------------------------------------------------------------
 
@@ -44,7 +44,9 @@ However if you want to go further and make more articulate mods and do things th
 - The folder "Ext" has to be next to the tool so that it can work properly.
 
 - ONLY IF YOU NEED TO CONVERT TEXTURES FROM "PNG" TO "BTX"
+
 Python 2.7 (x32): http://www.python.org/download/
+
 PyQt4 (x32): http://www.riverbankcomputing.co.uk/software/pyqt/download
 
 -------------------------------------------------------------------------------------
@@ -113,6 +115,6 @@ right type of ".pak" you are going to work on.
 - "Kontract.dll" is used to decompress and compress files.
   Thanks to: https://github.com/IcySon55/Kuriimu
   
-- "to_BTX.py" and "util.py" are used to convert textures from ".PNG" to ".BTX".
-  Thanks to: https://twitter.com/yukinogatari
+- "to_BTX.py" and "util.py" are used to convert textures from ".PNG" to ".BTX".  
   I took the original files from yukinogatari and made my own changes, like adding new "BTX" formats.
+  Thanks to: https://twitter.com/yukinogatari
