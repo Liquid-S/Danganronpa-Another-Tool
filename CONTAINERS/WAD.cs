@@ -23,7 +23,7 @@ namespace Danganronpa_Another_Tool
                     uint AmountOfFiles = WadBinReader.ReadUInt32(),
                          NameLength = 0;
 
-                    int[] FilesSizes = new int[AmountOfFiles], OffsetFiles = new int[AmountOfFiles];
+                    uint[] FilesSizes = new uint[AmountOfFiles], OffsetFiles = new uint[AmountOfFiles];
                     string[] FilesNames = new string[AmountOfFiles];
 
                     // START memorization name, size and offset of each file contained in the WAD.
@@ -32,9 +32,9 @@ namespace Danganronpa_Another_Tool
                         NameLength = WadBinReader.ReadUInt32(); // It stores the length of the filename.
                         byte[] TempName = new byte[NameLength];
                         WadBinReader.Read(TempName, 0, TempName.Length); // It reads the filename and stores it temporarily in "TempName".
-                        FilesSizes[i] = WadBinReader.ReadInt32(); // It stores the file size.
+                        FilesSizes[i] = WadBinReader.ReadUInt32(); // It stores the file size.
                         WadBinReader.ReadInt32(); // Unk. It's always zero.
-                        OffsetFiles[i] = WadBinReader.ReadInt32(); // It stores the file offset.
+                        OffsetFiles[i] = WadBinReader.ReadUInt32(); // It stores the file offset.
                         WadBinReader.ReadInt32(); // Unk. It's always zero.
                         FilesNames[i] = Encoding.Default.GetString(TempName); // It stores the filename in FilesNames[].
                     }

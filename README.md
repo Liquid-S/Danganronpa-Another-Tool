@@ -5,26 +5,26 @@ If you're planning on translating the games, please consider there are
 projects already in process of working on them, which you can also join. 
 
 ## List of DR1 (PC) fan-made translations:
-- Italian: http://alliceteam.altervista.org/ (by All-Ice Team)
+- Italian: https://alliceteam.altervista.org/ (by All-Ice Team)
 - Spanish: https://tradusquare.es/grupo.php?name=transcene (by TranScene)
 - French: https://equipemirai.com/ (by Mirai Team)
 - Russian: http://anivisual.net/board/1-1-0-463 (By Проект Монокума (Monokuma Project))
 - Portuguese: https://discord.gg/aE7yGJz (by Kibou Project)
-- Turkish: https://truthfulroad.wordpress.com/danganronpa-umudun-umutsuz-ogrencileri/ (by Umudun Zirvesi Projesi or Project Hope's Peak)
+- Turkish: https://truthfulroad.wordpress.com/danganronpa-umudun-umutsuz-ogrencileri/ (by Umudun Zirvesi Projesi)
 
 ## List of DR2 (PC) fan-made translations:
 
-- Italian: http://alliceteam.altervista.org/ (by All-Ice Team)
+- Italian: https://alliceteam.altervista.org/ (by All-Ice Team)
 - Spanish: https://tradusquare.es/grupo.php?name=transcene (by TranScene)
 - French: https://equipemirai.com/ (by Mirai Team)
 - Russian: http://anivisual.net/board/1-1-0-877 (By horagema.exe)
 - Portuguese: https://discord.gg/aE7yGJz (by Kibou Project)
 
 ## List of DR AE (PC - PSVITA) fan-made translations:
-- Italian: http://alliceteam.altervista.org/ (by All-Ice Team)
+- Italian: https://alliceteam.altervista.org/ (by All-Ice Team)
 - Spanish: https://tradusquare.es/grupo.php?name=transcene (by TranScene)
 - French: https://equipemirai.com/ (by Mirai Team)
-- Russian: https://vk.com/club185606296 (by PastelCat's)
+- Russian: https://vk.com/pastelcats (by PastelCat's)
 
 -------------------------------------------------------------------------------------
 
@@ -105,7 +105,7 @@ right type of ".pak" you are going to work on.
   Thanks to: https://github.com/xdanieldzd/Scarlet
   
 - "GIM2PNG.exe" is used to convert textures from ".GIM" to ".PNG".
-  If you know who is the author of this tool, let me know.
+  Thanks to: https://junk2ool.net/tools/psx/start
   
 - "psp2gxt.exe" is used to convert textures from ".TGA" to ".GXT".
 

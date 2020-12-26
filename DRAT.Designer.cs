@@ -1169,7 +1169,7 @@
             MaximizeBox = false;
             Name = "DRAT";
             SizeGripStyle = System.Windows.Forms.SizeGripStyle.Hide;
-            Text = "Danganronpa: Another Tool (Vers: 1.5)";
+            Text = "Danganronpa: Another Tool (Vers: 1.5.1)";
             tabControl1.ResumeLayout(false);
             tabPage1.ResumeLayout(false);
             tableLayoutPanelDR1PSP.ResumeLayout(false);
