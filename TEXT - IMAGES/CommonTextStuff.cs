@@ -395,7 +395,7 @@ namespace Danganronpa_Another_Tool
                 }
 
                 // Print the original sentence.
-                if (ExtractedText[i] == "" || ExtractedText[i] == null)
+                if (ExtractedText[i] == string.Empty || ExtractedText[i] == null)
                 {
                     entry.Original = "[EMPTY_LINE]";
                     entry.Translated = "[EMPTY_LINE]";
@@ -416,7 +416,7 @@ namespace Danganronpa_Another_Tool
                 // Print the japanese sentence.
                 if (DRAT.aDDJAPANESETEXTToolStripMenuItem.Checked == true && JAPText != null)
                 {
-                    if (i < JAPText.Count && JAPText != null && JAPText[i] != "")
+                    if (i < JAPText.Count && JAPText != null && JAPText[i] != null && JAPText[i] != string.Empty)
                     {
                         entry.ExtractedComments = JAPText[i].Replace("\r\n", "\n#. ").Replace("\n\r", "\n#. ").Replace("\n", "\n#. ").Replace("\r", string.Empty); // The repalce is needed, otherwise PoEditor is not going to load correctly the jp text and the Repack is gonna crash.
                     }

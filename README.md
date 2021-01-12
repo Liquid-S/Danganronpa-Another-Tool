@@ -95,26 +95,26 @@ right type of ".pak" you are going to work on.
 
 # 4 — Acknowledgements 
 - "Yarhl.Media.dll", "Yarhl.dll" and "Mono.Addins.dll" are used to make and read ".PO" files.
-  Thanks to: https://github.com/SceneGate/Yarhl
+Thanks to: https://github.com/SceneGate/Yarhl
   
 - "convert.exe" is used to convert textures from ".TGA" to ".PNG" and viceversa.
-  Thanks to: http://www.imagemagick.org/script/convert.php
+Thanks to: http://www.imagemagick.org/script/convert.php
 
 - "ScarletTestApp.exe" is used to convert textures from ".GXT" and ".BTX" to ".PNG".
-  DRAT is using a moded version of Scarlet that I made with the purpose of make it work with DRAT and add new BTX formats.
-  Thanks to: https://github.com/xdanieldzd/Scarlet
+DRAT is using a moded version of Scarlet that I made with the purpose of make it work with DRAT and add new BTX formats.
+Thanks to: https://github.com/xdanieldzd/Scarlet
   
 - "GIM2PNG.exe" is used to convert textures from ".GIM" to ".PNG".
-  Thanks to: https://junk2ool.net/tools/psx/start
+Thanks to: https://junk2ool.net/tools/psx/start
   
 - "psp2gxt.exe" is used to convert textures from ".TGA" to ".GXT".
 
 - "YACpkTool.exe" is used to extract and repack ".CPK" files.
-  Thanks to: https://github.com/xdanieldzd/Scarlet
+Thanks to: https://github.com/Brolijah/YACpkTool
 
 - "Kontract.dll" is used to decompress and compress files.
-  Thanks to: https://github.com/IcySon55/Kuriimu
+Thanks to: https://github.com/IcySon55/Kuriimu
   
 - "to_BTX.py" and "util.py" are used to convert textures from ".PNG" to ".BTX".  
-  I took the original files from yukinogatari and made my own changes, like adding new "BTX" formats.
-  Thanks to: https://twitter.com/yukinogatari
+I took the original files from yukinogatari and made my own changes, like adding new "BTX" formats.
+Thanks to: https://twitter.com/yukinogatari
