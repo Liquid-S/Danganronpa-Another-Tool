@@ -11,6 +11,7 @@ projects already in process of working on them, which you can also join.
 - Russian: http://anivisual.net/board/1-1-0-463 (By Проект Монокума (Monokuma Project))
 - Portuguese: https://discord.gg/aE7yGJz (by Kibou Project)
 - Turkish: https://truthfulroad.wordpress.com/danganronpa-umudun-umutsuz-ogrencileri/ (by Umudun Zirvesi Projesi)
+- Polish: https://discord.com/invite/gynbFPb5Ey (by Monorynka Spolszczenia)
 
 ## List of DR2 (PC) fan-made translations:
 
@@ -19,6 +20,7 @@ projects already in process of working on them, which you can also join.
 - French: https://equipemirai.com/ (by Mirai Team)
 - Russian: http://anivisual.net/board/1-1-0-877 (By horagema.exe)
 - Portuguese: https://discord.gg/aE7yGJz (by Kibou Project)
+- Polish: https://discord.com/invite/gynbFPb5Ey (by Monorynka Spolszczenia)
 
 ## List of DR AE (PC - PSVITA) fan-made translations:
 - Italian: https://alliceteam.altervista.org/ (by All-Ice Team)
