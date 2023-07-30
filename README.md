@@ -46,7 +46,7 @@ However if you want to go further and make more articulate mods and do things th
 - .NET Framework 4.7.2: <https://support.microsoft.com/en-us/help/4054529/microsoft-net-framework-4-7-2-language-pack-offline-installer-for-wind>
 - The folder `Ext` has to be next to the tool so that it can work properly.
 
-### If you need to convert textures from `PNG` to `BTX`
+### If you need to convert textures from `PNG` to `BTX`:
 
 Python 2.7 (x32): <http://www.python.org/download/>
 
