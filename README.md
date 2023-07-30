@@ -93,7 +93,7 @@ Thanks to: <https://github.com/SceneGate/Yarhl>
 
 Thanks to: <http://www.imagemagick.org/script/convert.php>
 
-- `ScarletTestApp.exe` is used to convert textures from `GXT` and `BTX` to `PNG`^
+- `ScarletTestApp.exe` is used to convert textures from `GXT` and `BTX` to `PNG`
 
 DRAT is using a moded version of Scarlet that I made with the purpose of make it work with DRAT and add new BTX formats.\
 Thanks to: <https://github.com/xdanieldzd/Scarlet>
