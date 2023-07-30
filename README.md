@@ -6,7 +6,7 @@ projects already in process of working on them, which you can also join.
 
 ## List of DR1 (PC) fan-made translations:
 - Italian: https://alliceteam.altervista.org/ (by All-Ice Team)
-- Spanish: https://tradusquare.es/grupo.php?name=transcene (by TranScene)
+- Spanish: https://tradusquare.es/proyectos/danganronpa/ (by TranScene)
 - French: https://equipemirai.com/ (by Mirai Team)
 - Russian: http://anivisual.net/board/1-1-0-463 (By Проект Монокума (Monokuma Project))
 - Portuguese: https://discord.gg/aE7yGJz (by Kibou Project)
@@ -16,7 +16,7 @@ projects already in process of working on them, which you can also join.
 ## List of DR2 (PC) fan-made translations:
 
 - Italian: https://alliceteam.altervista.org/ (by All-Ice Team)
-- Spanish: https://tradusquare.es/grupo.php?name=transcene (by TranScene)
+- Spanish: https://tradusquare.es/proyectos/danganronpa-2/ (by TranScene)
 - French: https://equipemirai.com/ (by Mirai Team)
 - Russian: http://anivisual.net/board/1-1-0-877 (By horagema.exe)
 - Portuguese: https://discord.gg/aE7yGJz (by Kibou Project)
@@ -24,7 +24,7 @@ projects already in process of working on them, which you can also join.
 
 ## List of DR AE (PC - PSVITA) fan-made translations:
 - Italian: https://alliceteam.altervista.org/ (by All-Ice Team)
-- Spanish: https://tradusquare.es/grupo.php?name=transcene (by TranScene)
+- Spanish: https://tradusquare.es/proyectos/danganronpa-another-episode/ (by TranScene)
 - French: https://equipemirai.com/ (by Mirai Team)
 - Russian: https://vk.com/pastelcats (by PastelCat's)
 
